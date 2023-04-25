@@ -1,30 +1,51 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <v-app>
+    <v-main>
+      <v-toolbar v-if="loggedIn"> 
+        <v-spacer></v-spacer>
+        <h1>{{ name }}</h1>
+        <v-avatar 
+          color="red" 
+          size="50">
+          <v-img
+            size="50"
+            :alt="name"
+            :src="image"
+          ></v-img>
+        </v-avatar>
+      </v-toolbar>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { VueCookieNext } from 'vue-cookie-next'
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+export default defineComponent({
+  name: 'App',
+  data() {
+    return {
+      loggedIn: false,
+    }
+  },
+  watch:{
+    $route() {
+      if (VueCookieNext.getCookie('access_token') != null) {
+        this.loggedIn = true
+      } else {
+        this.$router.push({ name: 'login' });
+      }
+    }
+  },
+  computed: {
+    name(): string {
+      return VueCookieNext.getCookie('user_name');
+    },
+    image(): string {
+      return VueCookieNext.getCookie('user_image_url');
+    },
+  }
+});
+</script>
