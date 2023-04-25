@@ -112,9 +112,10 @@ export const Actions: ActionTree<AccountState, object> = {
       });
   },
 
-  async Logout() {
+  async Logout(): Promise<any> {
     VueCookieNext.keys().forEach((key) => {
       VueCookieNext.removeCookie(key);
     });
+    return Promise.resolve();
   },
 }

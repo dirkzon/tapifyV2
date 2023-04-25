@@ -2,17 +2,12 @@
   <v-app>
     <v-main>
       <v-toolbar v-if="loggedIn"> 
-        <v-spacer></v-spacer>
-        <h1>{{ name }}</h1>
-        <v-avatar 
-          color="red" 
-          size="50">
-          <v-img
-            size="50"
-            :alt="name"
-            :src="image"
-          ></v-img>
-        </v-avatar>
+          <v-container>  
+            <h1 class="float-right">TAPIFY</h1>
+          </v-container>
+          <v-container>  
+            <accountComponent class="float-right"> </accountComponent>
+          </v-container>
       </v-toolbar>
       <router-view/>
     </v-main>
@@ -22,9 +17,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { VueCookieNext } from 'vue-cookie-next'
+import  accountComponent from '@/components/Account.vue';
 
 export default defineComponent({
   name: 'App',
+  components: {
+    accountComponent,
+  },
   data() {
     return {
       loggedIn: false,
@@ -35,17 +34,10 @@ export default defineComponent({
       if (VueCookieNext.getCookie('access_token') != null) {
         this.loggedIn = true
       } else {
+        this.loggedIn = false;
         this.$router.push({ name: 'login' });
       }
     }
   },
-  computed: {
-    name(): string {
-      return VueCookieNext.getCookie('user_name');
-    },
-    image(): string {
-      return VueCookieNext.getCookie('user_image_url');
-    },
-  }
 });
 </script>
