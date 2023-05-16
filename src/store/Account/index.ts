@@ -2,7 +2,6 @@ import { Module } from "vuex";
 import { Actions } from "./actions";
 import { AccountState } from "./types";
 
-export const accountModule: Module<AccountState, object> = {
-  state: {},
+export const AccountModule: Module<AccountState, object> = {
   actions: Actions,
 }

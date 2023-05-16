@@ -1,9 +1,11 @@
 import { createStore } from 'vuex'
-import { accountModule } from './Account'
+import { AccountModule } from './Account'
+import { PlaylistModule } from './Playlist'
 
 export default createStore({
   state: {},  
   modules: {
-    accountMod: accountModule
+    accountModule: AccountModule,
+    playlistModule: PlaylistModule,
   }
 })
