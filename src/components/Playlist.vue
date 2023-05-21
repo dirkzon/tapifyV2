@@ -39,7 +39,7 @@ export default defineComponent({
   props: ["playlist"],
   methods: {
     click() {
-        alert(this.playlist.id)
+        this.$router.push({ name: 'cassette', params: { id: this.playlist.id }});
     }
   }
 })

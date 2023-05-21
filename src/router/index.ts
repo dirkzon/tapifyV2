@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import Callback from '../views/Callback.vue'
 import HomeView from '../views/HomeView.vue'
+import CassetteView from '../views/CassetteView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/home',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/cassette/:id',
+    name: 'cassette',
+    component: CassetteView
   }
 ]
 
