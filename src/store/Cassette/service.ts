@@ -10,11 +10,21 @@ export function SortSides(sides: Array<CassetteSideState>): Array<CassetteSideSt
       sortedsides.push({tracks: [], duration: 0});
     })
 
-    console.log(sortedsides);
     durationSort.forEach((track: TrackState) => {
       const shortestSide = lodash.sortBy(sortedsides, (side) => side.duration)[0];
       shortestSide.tracks.push(track);
       shortestSide.duration += track.duration;
     });
     return sortedsides;
+}
+
+export function getTrackeById(sides: Array<CassetteSideState>, trackId: string): TrackState | null {
+  let track = null;
+  sides.forEach((side: CassetteSideState) => {
+    const index = side.tracks.findIndex((track) => track.id === trackId);
+    if(index >= 0) {
+        track = side.tracks[index]; 
+    } 
+  });
+  return track;
 }
