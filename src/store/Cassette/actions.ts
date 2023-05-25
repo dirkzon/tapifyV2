@@ -1,5 +1,5 @@
 import { ActionTree } from "vuex";
-import { CassetteState } from "./types";
+import { CassetteState, TrackState } from "./types";
 import axios from "axios";
 import { VueCookieNext } from "vue-cookie-next";
 import { SortSides } from "./service";
@@ -20,8 +20,20 @@ export const Actions: ActionTree<CassetteState, object> = {
           throw new Error(err);
         })
         .then((response) => {
-            response.data.tracks.items.forEach((item: { track: object; }) => {
-                commit("ADD_TRACK_TO_SIDE", { index:0, track: item.track });
+            response.data.tracks.items.forEach((item: any) => {
+              const newTrack: TrackState = {
+                name: item.track.name,
+                image: item.track.album.images[0].url,
+                id: item.track.id,
+                duration: item.track.duration_ms,
+                artists: [],
+                locked: false,
+                hidden: false
+                }
+                item.track.artists.forEach((artist: { name: string; }) => {
+                    newTrack.artists.push(artist.name)
+                });
+                commit("ADD_TRACK_TO_SIDE", { index:0, track: newTrack });
             });
         });
     },
@@ -46,10 +58,37 @@ export const Actions: ActionTree<CassetteState, object> = {
       });
     },
 
+    AddCassetteSide({commit, state}) {
+      commit("ADD_SIDE");
+      const sides = SortSides(state.sides);
+      for (let i = 0; i < sides.length; i++) {
+        commit("SET_SIDE", {index: i, side: sides[i]});
+      }
+    },
+
     SortSides({commit, state}) {
       const sides = SortSides(state.sides);
       for (let i = 0; i < sides.length; i++) {
         commit("SET_SIDE", {index: i, side: sides[i]});
+      }
+    },
+
+    ResetCassette({commit}) {
+      commit("CLEAR_SIDES");
+      commit("RESET_SIDE_COUNT")
+    },
+
+    DeleteSide({commit, state}, sideIndex) {
+      if(state.sides.length > 1 && sideIndex > 0) {
+        const tracks = state.sides[sideIndex].tracks
+        tracks.forEach(track => {
+          commit("ADD_TRACK_TO_SIDE", { index:0, track: track });
+        })
+        commit("REMOVE_SIDE", sideIndex);
+        const sides = SortSides(state.sides);
+        for (let i = 0; i < sides.length; i++) {
+          commit("SET_SIDE", {index: i, side: sides[i]});
+        }
       }
     }
 }

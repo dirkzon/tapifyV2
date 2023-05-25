@@ -1,0 +1,69 @@
+<template>
+    <v-card class="pa-10">
+      <v-row>
+        <v-col>
+          <v-card-title v-text="`${String.fromCharCode(97 + sideIndex)}-side`"> </v-card-title>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn icon small @click="DeleteSide" v-if="sideIndex != 0">
+              <v-icon>
+                  mdi-delete-forever
+              </v-icon>
+            </v-btn>
+        </v-col>
+      </v-row>
+        <draggable 
+        v-model="tracks" 
+        :group="`tracks`"
+        item-key="id">
+            <template #item="{element}">
+                <v-card tile class="ma-1">
+                  <v-row style="margin: 1px">
+                    <v-col md="2">
+                          <v-img :src="element.image"></v-img>
+                    </v-col>
+                    <v-col>
+                      <v-row>
+                        <v-card-title v-text="element.name" style="margin: 0"></v-card-title>
+                      </v-row>
+                      <v-row
+                        v-for="artist in element.artists"
+                        :key="artist"
+                        style="padding: 2px">
+                        <v-card-subtitle v-text="`${artist}; `"></v-card-subtitle>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </v-card>
+            </template>
+        </draggable>
+    </v-card>
+</template>
+
+<script lang='ts'>
+import { defineComponent } from 'vue'
+import draggable from 'vuedraggable'
+
+export default defineComponent({
+  name: 'CassetteSide',
+  props: ["sideIndex"],
+  components: {
+    draggable,
+  },
+  computed: {
+    tracks: {
+      get() {
+        return this.$store.getters.getCassetteSideTracks(this.sideIndex);
+      },
+      set() {
+        console.log('');
+      },
+    },
+  },
+  methods: {
+    DeleteSide: function () {
+      this.$store.dispatch('DeleteSide',this.sideIndex );
+    }
+  }
+})
+</script>
