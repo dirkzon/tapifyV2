@@ -1,27 +1,20 @@
 import { MutationTree } from "vuex";
-import { CassetteState, TrackState } from "./types";
+import { CassetteState } from "./types";
 import { getTrackeById } from "./service";
 
 export const Mutations: MutationTree<CassetteState> = {
     ADD_TRACK_TO_SIDE(state, { index, track }) {
-        const newTrack: TrackState = {
-            name: track.name,
-            id: track.id,
-            duration: track.duration_ms,
-            artists: [],
-            locked: false,
-            hidden: false
-        }
-        track.artists.forEach((artist: { name: string; }) => {
-            newTrack.artists.push(artist.name)
-        });
-        state.sides[index].tracks.push(newTrack);
-        state.sides[index].duration += newTrack.duration
-        state.duration += newTrack.duration;
+        state.sides[index].tracks.push(track)
+        state.sides[index].duration += track.duration
+        state.duration += track.duration;
     },
 
     SET_SIDE(state, { index, side }) {
         state.sides[index] = side;
+    },
+
+    REMOVE_SIDE(state, index) {
+        state.sides.splice(index, 1)
     },
 
     SET_AUDIO_FEATURE_ON_TRACK(state, audio_features) {
@@ -34,4 +27,23 @@ export const Mutations: MutationTree<CassetteState> = {
             track.tempo = audio_features.tempo;
         }
     },
+
+    CLEAR_SIDES(state) {
+        state.sides.forEach((side) => {
+            side.tracks = [];
+            side.duration = 0;
+        });
+        state.duration = 0;
+    },
+    
+    RESET_SIDE_COUNT(state) {
+        state.sides.splice(1, state.sides.length - 2)
+    },
+
+    ADD_SIDE(state) {
+        state.sides.push({
+           duration: 0,
+           tracks: [], 
+        })
+    }
 }

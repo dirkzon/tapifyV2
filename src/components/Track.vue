@@ -1,7 +1,7 @@
 <template>
-    <v-card>
-        {{ track.name }}
-    </v-card>
+    <div>
+        {{ track }}
+    </div>
 </template>
 
 <script lang='ts'>
