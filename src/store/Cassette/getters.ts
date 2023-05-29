@@ -9,4 +9,8 @@ export const Getters: GetterTree<CassetteState, object> = {
     getCassetteSideTracks: (state) => (index: number) => {
         return state.sides[index].tracks;
     },
+
+    getCassetteSideDuration: (state) => (index: number) => {
+        return state.sides[index].duration;
+    },
 }

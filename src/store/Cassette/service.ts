@@ -18,13 +18,13 @@ export function SortSides(sides: Array<CassetteSideState>): Array<CassetteSideSt
     return sortedsides;
 }
 
-export function getTrackeById(sides: Array<CassetteSideState>, trackId: string): TrackState | null {
-  let track = null;
-  sides.forEach((side: CassetteSideState) => {
-    const index = side.tracks.findIndex((track) => track.id === trackId);
-    if(index >= 0) {
-        track = side.tracks[index]; 
-    } 
-  });
-  return track;
+export function GetTrackSideAndPositionIndex(sides: Array<CassetteSideState>, trackId: string): number[] {
+  let sideTrackIndex = [-1, -1];
+  for (let i = 0; i < sides.length; i++) {
+    const trackIndex = sides[i].tracks.findIndex((track: TrackState) => track.id === trackId);
+    if(trackIndex >= 0) {
+      sideTrackIndex = [i, trackIndex];
+    }
+  }
+  return sideTrackIndex;
 }
