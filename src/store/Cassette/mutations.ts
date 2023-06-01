@@ -1,24 +1,23 @@
 import { MutationTree } from "vuex";
 import { CassetteState } from "./types";
-import { getTrackeById } from "./service";
 
 export const Mutations: MutationTree<CassetteState> = {
-    ADD_TRACK_TO_SIDE(state, { index, track }) {
-        state.sides[index].tracks.push(track)
-        state.sides[index].duration += track.duration
+    ADD_TRACK_TO_SIDE(state, { sideIndex, track }) {
+        state.sides[sideIndex].tracks.push(track)
+        state.sides[sideIndex].duration += track.duration
         state.duration += track.duration;
     },
 
-    SET_SIDE(state, { index, side }) {
-        state.sides[index] = side;
+    SET_SIDE(state, { sideIndex, side }) {
+        state.sides[sideIndex] = side;
     },
 
-    REMOVE_SIDE(state, index) {
-        state.sides.splice(index, 1)
+    REMOVE_SIDE(state, sideIndex) {
+        state.sides.splice(sideIndex, 1)
     },
 
-    SET_AUDIO_FEATURE_ON_TRACK(state, audio_features) {
-        const track = getTrackeById(state.sides, audio_features.id);
+    SET_AUDIO_FEATURE_ON_TRACK(state, {trackIndex, sideIndex, audio_features}) {
+        const track = state.sides[sideIndex].tracks[trackIndex];
         if (track != null) {
             track.danceability = audio_features.danceability;
             track.energy = audio_features.energy;
@@ -45,5 +44,9 @@ export const Mutations: MutationTree<CassetteState> = {
            duration: 0,
            tracks: [], 
         })
+    },
+
+    SET_TRACK_HIDDEN(state, { trackIndex, sideIndex, hiddenState }) {
+        state.sides[sideIndex].tracks[trackIndex].hidden = hiddenState;
     }
 }
