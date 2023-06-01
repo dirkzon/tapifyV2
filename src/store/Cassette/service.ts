@@ -3,7 +3,8 @@ import { CassetteSideState, TrackState } from "./types";
 
 export function SortSides(sides: Array<CassetteSideState>): Array<CassetteSideState> {
     const tracks = lodash.flatMap(sides, (side) => side.tracks);
-    const durationSort = lodash.sortBy(tracks, (track) => track.duration).reverse();
+    const visisbleTracks = lodash.filter(tracks, (track: TrackState) => !track.hidden)
+    const durationSort = lodash.sortBy(visisbleTracks, (track) => track.duration).reverse();
 
     const sortedsides: Array<CassetteSideState> = new Array<CassetteSideState>();
     sides.forEach(() => {

@@ -100,5 +100,9 @@ export const Actions: ActionTree<CassetteState, object> = {
         const hiddenState = state.sides[side].tracks[track].hidden
         commit("SET_TRACK_HIDDEN", { trackIndex: track, sideIndex: side, hiddenState: !hiddenState });
       }
+      const sides = SortSides(state.sides);
+      for (let i = 0; i < sides.length; i++) {
+        commit("SET_SIDE", {sideIndex: i, side: sides[i]});
+      }
     },
 }
