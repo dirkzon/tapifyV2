@@ -3,19 +3,35 @@ import { CassetteSideState, TrackState } from "./types";
 
 export function SortSides(sides: Array<CassetteSideState>): Array<CassetteSideState> {
     const tracks = lodash.flatMap(sides, (side) => side.tracks);
-    const visisbleTracks = lodash.filter(tracks, (track: TrackState) => !track.hidden)
-    const durationSort = lodash.sortBy(visisbleTracks, (track) => track.duration).reverse();
+    const sortableTracks = lodash.filter(tracks, (track: TrackState) => !track.locked)
+    const durationSort = lodash.sortBy(sortableTracks, (track) => track.duration).reverse();
 
     const sortedsides: Array<CassetteSideState> = new Array<CassetteSideState>();
-    sides.forEach(() => {
-      sortedsides.push({tracks: [], duration: 0});
-    })
+    for (let i = 0; i < sides.length; i++) {
+      const lockedTracks = lodash.filter(sides[i].tracks, (track: TrackState) => track.locked);
+      sortedsides.push({
+        tracks: [], 
+        duration: lodash.sumBy(lockedTracks, (track) => track.duration),
+      });
+    }
 
     durationSort.forEach((track: TrackState) => {
       const shortestSide = lodash.sortBy(sortedsides, (side) => side.duration)[0];
       shortestSide.tracks.push(track);
       shortestSide.duration += track.duration;
     });
+
+    for (let i = 0; i < sides.length; i++) {
+      for (let k = 0; k < sides[i].tracks.length; k++) {
+        if(sides[i].tracks[k].locked) {
+          let insertIndex = k;
+          if(k > sortedsides[i].tracks.length) {
+            insertIndex = sortedsides[i].tracks.length;
+          }
+          sortedsides[i].tracks.splice(insertIndex, 0, sides[i].tracks[k]);
+        }
+      }
+    }
     return sortedsides;
 }
 

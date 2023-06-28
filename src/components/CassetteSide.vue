@@ -1,28 +1,44 @@
 <template>
-    <v-card class="pa-10">
-      <v-row>
-        <v-col>
-          <v-card-title v-text="`${String.fromCharCode(97 + sideIndex)}-side`"> </v-card-title>
-        </v-col>
-        <v-col>
-          <v-card-subtitle v-text="`${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}`"></v-card-subtitle>
-        </v-col>
-        <v-col cols="auto">
-          <v-btn icon small @click="DeleteSide" v-if="sideIndex != 0">
-              <v-icon>
-                  mdi-delete-forever
-              </v-icon>
-            </v-btn>
-        </v-col>
-      </v-row>
-          <draggable 
-            v-model="tracks" 
-            :group="`tracks`"
-            item-key="id">
-              <template #item="{element}">
-                <Track v-bind:track="element"></Track>
-              </template>
-          </draggable>
+    <v-card 
+      class="ma-4 flex-grow-1"
+      min-width="400px"
+      max-width="800px">
+      <v-card-actions class="ma-2">
+        <v-card-title v-text="`${String.fromCharCode(97 + sideIndex)}-side`"> </v-card-title>
+        <v-card-subtitle v-text="`${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}`"></v-card-subtitle>
+        <v-spacer></v-spacer>
+        <v-btn-group>
+          <v-btn
+            @click="addSide" 
+            variant="text"
+            icon="mdi-playlist-plus"
+          ></v-btn>
+          <v-btn
+            @click="DeleteSide" 
+            v-if="sideIndex != 0"
+            variant="text"
+            icon="mdi-playlist-remove"
+          ></v-btn>
+          <v-btn
+            variant="text"
+            icon="mdi-dots-vertical"
+          ></v-btn>
+        </v-btn-group>
+      </v-card-actions>
+      <v-list class="pa-2" lines="two">
+        <draggable 
+        @change="lockTrack"
+        v-model="tracks" 
+        item-key="id"
+        v-bind="dragOptions">
+          <template #item="{element}">
+            <div>
+              <Track v-bind:track="element"></Track>
+              <v-divider></v-divider>
+            </div>
+          </template>
+      </draggable>
+      </v-list>
     </v-card>
 </template>
 
@@ -43,21 +59,52 @@ export default defineComponent({
       get() {
         return this.$store.getters.getCassetteSideTracks(this.sideIndex);
       },
-      set() {
-        console.log('');
+      set(value: any) {
+        this.$store.dispatch("UpdateSide", {
+          tracks: value,
+          sideIndex: this.sideIndex,
+        });
       },
     },
     duration(): Date {
       return new Date(this.$store.getters.getCassetteSideDuration(this.sideIndex));
+    },
+    dragOptions() {
+      return {
+        animation: 150,
+        group: "tracks",
+        disabled: false,
+      };
     },
   },
   methods: {
     DeleteSide: function () {
       this.$store.dispatch('DeleteCassetteSide',this.sideIndex);
     },
-    SetHidden: function (trackId: string) {
-      this.$store.dispatch('SetHiddenState', trackId);
+    lockTrack: function(event: any) {
+      if (event.added) {
+        this.$store.dispatch("SetLockedState", {
+          trackId: event.added.element.id,
+          lockState: true,
+        });
+        this.$store.dispatch("SetHiddenState", {
+          trackId: event.added.element.id,
+          hiddenState: false,
+        });
+      }
+      if (event.moved) {
+        this.$store.dispatch("SetLockedState", {
+          trackId: event.moved.element.id,
+          lockState: true,
+        });
+      }
+      if (event.removed) {
+        this.$store.dispatch("SortSides");
+      }
     },
+    addSide: function () {
+      this.$store.dispatch("AddCassetteSide");
+    }
   }
 })
 </script>

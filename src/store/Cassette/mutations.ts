@@ -2,6 +2,15 @@ import { MutationTree } from "vuex";
 import { CassetteState } from "./types";
 
 export const Mutations: MutationTree<CassetteState> = {
+    SET_CASSETTE_METADATA(state, {metadata, userIsOwner}) {
+        state.name = metadata.name;
+        state.description = metadata.description;
+        state.image = metadata.images[0].url;
+        state.owner.name = metadata.owner.display_name;
+        state.owner.url = metadata.owner.href;
+        state.owner.userIsOwner = userIsOwner;
+    },
+
     ADD_TRACK_TO_SIDE(state, { sideIndex, track }) {
         state.sides[sideIndex].tracks.push(track)
         state.sides[sideIndex].duration += track.duration
@@ -46,7 +55,7 @@ export const Mutations: MutationTree<CassetteState> = {
         })
     },
 
-    SET_TRACK_HIDDEN(state, { trackIndex, sideIndex, hiddenState }) {
-        state.sides[sideIndex].tracks[trackIndex].hidden = hiddenState;
+    SET_TRACK_LOCKED(state, { trackIndex, sideIndex, lockedState }) {
+        state.sides[sideIndex].tracks[trackIndex].locked = lockedState;
     }
 }

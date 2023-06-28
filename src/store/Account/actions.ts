@@ -109,6 +109,7 @@ export const Actions: ActionTree<AccountState, object> = {
         VueCookieNext.setCookie('user_name',  response.data.display_name);
         VueCookieNext.setCookie('user_image_url',  response.data.images[0]?.url);
         VueCookieNext.setCookie('user_uri',  response.data.uri);
+        VueCookieNext.setCookie('user_id',  response.data.id);
       });
   },
 

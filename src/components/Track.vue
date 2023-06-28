@@ -1,24 +1,34 @@
 <template>  
-  <div>
-    <v-card flat>
-      <v-row no-gutters justify="start">
-        <v-col xs="12" sm="3" md="6" lg="3" cols="2">
-            <v-img 
-              :src="track.image" 
-              :width="track.duration / 2000"
-              min-width="50"
-              max-width="120"
-              class="ma-1"
-            ></v-img>
-        </v-col>
-        <v-col xs="12" sm="7" md="6" lg="7">
-          <v-card-title v-text="track.name"></v-card-title>
-          <v-card-subtitle v-text="track.artists.join('; ')"></v-card-subtitle>
-        </v-col>
-      </v-row>
-    </v-card>
-    <v-divider></v-divider>
-  </div>
+  <v-list-item
+      color="blue">
+    <template v-slot:prepend>
+      <v-avatar
+          :size="imageWidth"
+          rounded="0"
+          tile="true">
+          <v-img 
+              :src="track.image">
+          </v-img>
+      </v-avatar>
+    </template>
+    <v-list-item-title v-text="track.name"></v-list-item-title>
+    <v-list-item-subtitle v-text="track.artists.join('; ')"></v-list-item-subtitle>
+    <template v-slot:append>
+      <v-btn-group>
+        <v-btn
+          @click="playPreview"
+          :disabled="track.preview == null"
+          variant="text"
+          :icon="track.previewPlaying ? 'mdi-pause' : 'mdi-play'"
+        ></v-btn>
+        <v-btn
+          @click="setLock"
+          variant="text"
+          :icon="track.locked ? 'mdi-lock' : 'mdi-lock-open-variant'"
+        ></v-btn>
+      </v-btn-group>
+    </template>
+  </v-list-item>
 </template>
 
 <script lang='ts'>
@@ -27,18 +37,23 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'CassetteTrack',
   props: ["track"],
-})
+  methods: {
+    setLock: function() {
+      this.$store.dispatch("SetLockedState", {
+          trackId: this.track.id,
+          lockState: !this.track.locked,
+      });
+    },
+    playPreview: function() {
+      this.$store.dispatch("PlayPreview", this.track.id);
+    },
+  },
+  computed:{
+    imageWidth: function(): number {
+      const max = this.$store.getters.getCassetteMaxDuration;
+      const min = this.$store.getters.getCassetteMinDuration;
+      return 40 + (90 - 40) * (this.track.duration - min) / (max - min);
+    },
+  }
+});
 </script>
-
-  <!-- <v-card tile :disabled="track.hidden" flat  :height="50">
-    <v-row style="margin: 1px" :height="50">
-      <v-col>
-        <v-img 
-          :src="track.image" 
-          aspect-ratio="1"
-          height="auto"
-        ></v-img>
-      </v-col>
-    </v-row>
-  </v-card>
-  <v-divider></v-divider> -->

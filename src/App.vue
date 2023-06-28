@@ -1,14 +1,14 @@
 <template>
   <v-app>
     <v-main>
-      <v-toolbar v-if="loggedIn"> 
+      <v-app-bar v-if="loggedIn"> 
           <v-container>  
             <h1 class="float-right">TAPIFY</h1>
           </v-container>
           <v-container>  
             <accountComponent class="float-right"> </accountComponent>
           </v-container>
-      </v-toolbar>
+      </v-app-bar>
       <router-view/>
     </v-main>
   </v-app>
