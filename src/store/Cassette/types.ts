@@ -15,6 +15,7 @@ export interface Owner {
 
 export interface CassetteSideState {
     duration: number,
+    length: number,
     tracks: Array<TrackState>,
 }
 

@@ -1,8 +1,8 @@
 <template>
-    <v-list-item v-if="trackPlaying" lines="one">
+     <v-list-item lines="one" v-if="trackPlaying" class="d-flex justify-center" justify="space-around">
         <template v-slot:prepend>
             <v-avatar
-                size="40"
+                size="60"
                 rounded="0"
                 tile="true">
                     <v-img 
@@ -10,27 +10,30 @@
                     </v-img>
             </v-avatar>
         </template>
-        <v-list-item-title v-text="playingTrack.name"></v-list-item-title>
-        <v-list-item-subtitle v-text="playingTrack.artists.join('; ')"></v-list-item-subtitle>
-    </v-list-item>
-    <v-list-item lines="one" v-if="trackPlaying" class="d-flex justify-center" justify="space-around">
-        <v-btn-group>
-            <v-btn
-                @click="playPrevious"
-                variant="text"
-                icon="mdi-skip-previous"
-            ></v-btn>
-            <v-btn
-                @click="playPreview"
-                variant="text"
-                :icon="playingTrack.previewPlaying ? 'mdi-pause' : 'mdi-play'"
-            ></v-btn>
-            <v-btn
-                @click="playNext"
-                variant="text"
-                icon="mdi-skip-next"
-            ></v-btn>
-        </v-btn-group>
+        <v-col>
+            <v-row>
+                <v-list-item-title v-text="playingTrack.name"></v-list-item-title>
+            </v-row>
+            <v-row>
+                <v-btn-group>
+                    <v-btn
+                        @click="playPrevious"
+                        variant="text"
+                        icon="mdi-skip-previous"
+                    ></v-btn>
+                    <v-btn
+                        @click="playPreview"
+                        variant="text"
+                        :icon="playingTrack.previewPlaying ? 'mdi-pause' : 'mdi-play'"
+                    ></v-btn>
+                    <v-btn
+                        @click="playNext"
+                        variant="text"
+                        icon="mdi-skip-next"
+                    ></v-btn>
+                </v-btn-group>
+            </v-row>
+        </v-col>
     </v-list-item>
 </template>
 
@@ -39,6 +42,12 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'MediaControls',
+  created() {
+    window.addEventListener("keydown", this.handleKeyEvent);
+  },
+  unmounted() {
+    window.removeEventListener("keydown", this.handleKeyEvent);
+  },
   computed: {
         playingTrack() {
             return this.$store.getters.getPlayingTrack;
@@ -56,7 +65,20 @@ export default defineComponent({
         },
         playPrevious: function() {
             this.$store.dispatch("PlayPreviousPreview", this.playingTrack.id);
-        }
+        },
+        handleKeyEvent: function(event: any) {
+            if(this.trackPlaying) {
+                if(event.key == 'ArrowRight' || event.key == 'MediaTrackNext') {
+                    this.$store.dispatch("PlayNextPreview", this.playingTrack.id);
+                }
+                if(event.key == 'ArrowLeft' || event.key == 'MediaTrackPrevious') {
+                    this.$store.dispatch("PlayPreviousPreview", this.playingTrack.id);
+                }
+                // if(event.key == 'MediaPlayPause') {
+                //     this.$store.dispatch("PlayPreview", this.playingTrack.id);
+                // }
+            }
+        },
     }
   })
 </script>

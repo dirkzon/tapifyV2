@@ -18,10 +18,12 @@ export const CassetteModule: Module<CassetteState, object> = {
         sides: [
             {
                 duration: 0,
+                length: 30,
                 tracks: [],
             },
             {
                 duration: 0,
+                length: 30,
                 tracks: [],
             },
         ],

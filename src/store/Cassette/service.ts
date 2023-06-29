@@ -11,6 +11,7 @@ export function SortSides(sides: Array<CassetteSideState>): Array<CassetteSideSt
       const lockedTracks = lodash.filter(sides[i].tracks, (track: TrackState) => track.locked);
       sortedsides.push({
         tracks: [], 
+        length: 30,
         duration: lodash.sumBy(lockedTracks, (track) => track.duration),
       });
     }

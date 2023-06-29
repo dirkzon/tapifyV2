@@ -197,5 +197,9 @@ export const Actions: ActionTree<CassetteState, object> = {
 
       const previousTrackId = state.sides[previousSideIndex].tracks[previousTrackIndex].id;
       dispatch('PlayPreview', previousTrackId);
-    }
+    },
+
+    SetCassetteLength({commit}, {sideIndex, newLength}) {
+      commit('SET_SIDE_LENGTH', {sideIndex, newLength})
+  }
 }

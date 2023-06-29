@@ -51,11 +51,16 @@ export const Mutations: MutationTree<CassetteState> = {
     ADD_SIDE(state) {
         state.sides.push({
            duration: 0,
+           length: 30,
            tracks: [], 
         })
     },
 
     SET_TRACK_LOCKED(state, { trackIndex, sideIndex, lockedState }) {
         state.sides[sideIndex].tracks[trackIndex].locked = lockedState;
-    }
+    },
+
+    SET_SIDE_LENGTH(state, {sideIndex, newLength}) {
+        state.sides[sideIndex].length = newLength;
+    },
 }

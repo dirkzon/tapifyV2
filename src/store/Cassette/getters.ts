@@ -15,6 +15,10 @@ export const Getters: GetterTree<CassetteState, object> = {
         return state.sides[index].duration;
     },
 
+    getCassetteSidelength: (state) => (index: number) => {
+        return state.sides[index].length;
+    },
+
     getCassetteMaxDuration: (state) => {
         const tracks = lodash.flatMap(state.sides, (side) => side.tracks);
         return lodash.maxBy(tracks, (track) => track.duration)?.duration;
