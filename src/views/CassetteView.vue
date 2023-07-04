@@ -100,6 +100,16 @@ export default defineComponent({
       },
     },
   },
+  beforeRouteLeave (_to_, _from_ , next) {
+    const answer = window.confirm('Changes will not be saved')
+    if (answer) {
+      this.$store.dispatch('StopAllPreviews');
+      this.$store.dispatch('ClearHiddenTracks');
+      next()
+    } else {
+      next(false)
+    }
+  }
 });
 </script>
   

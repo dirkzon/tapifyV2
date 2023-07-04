@@ -1,34 +1,20 @@
 <template>
-    <v-card>
-        <v-sheet class="d-flex">
-            <v-sheet class="ma-2 pa-0 me-auto">
-                <v-img
-                    aspect-ratio="1:1"
-                    height="150"
-                    width="150"
-                    :src="playlist.image"
-                ></v-img>
-            </v-sheet>
-            <v-sheet class="ma-2 pa-2 ">
-                <v-card-title v-text="playlist.name" class="text-h5"></v-card-title>
-                <v-card-text v-text="playlist.creator"></v-card-text>
-            </v-sheet>
-            <v-sheet class="ma-2 pa-2">
-                <v-btn-group>
-                    <v-btn icon @click="click()" small>
-                        <v-icon>
-                            mdi-page-next
-                        </v-icon>
-                    </v-btn>
-                    <v-btn icon :href="playlist.url" target="_blank" small>
-                        <v-icon>
-                            mdi-open-in-new 
-                        </v-icon>
-                    </v-btn>
-                </v-btn-group>
-            </v-sheet>
-        </v-sheet>
-    </v-card>
+    <v-list-item
+        link
+        @click="SelectPlaylist">
+        <template v-slot:prepend>
+            <v-avatar
+                size="75"
+                rounded="0"
+                tile="true">
+                <v-img 
+                    :src="playlist.image"> 
+                </v-img>
+            </v-avatar>
+        </template>
+        <v-list-item-title v-text="playlist.name"></v-list-item-title>
+        <v-list-item-subtitle v-text="playlist.creator"></v-list-item-subtitle>
+    </v-list-item>
 </template>
 
 <script lang='ts'>
@@ -38,7 +24,7 @@ export default defineComponent({
   name: 'PlaylistThumbnail',
   props: ["playlist"],
   methods: {
-    click() {
+    SelectPlaylist() {
         this.$router.push({ name: 'cassette', params: { id: this.playlist.id }});
     }
   }

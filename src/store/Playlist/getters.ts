@@ -1,10 +1,12 @@
 import { GetterTree } from "vuex";
-import { PlaylistState } from "./types";
+import { PlaylistsState } from "./types";
 
-export const Getters: GetterTree<[PlaylistState], object> = {
+export const Getters: GetterTree<PlaylistsState, object> = {
     getUsersPlaylists(state) {
-        //removes first empty element
-        state.shift();
-        return state;
-    }
+        return state.userPlaylists;
+    },
+
+    getSearchedPlaylists(state) {
+        return state.searchedPlaylists;
+    },
 }

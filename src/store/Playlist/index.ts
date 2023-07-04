@@ -1,17 +1,14 @@
 import { Module } from "vuex";
-import { PlaylistState } from "./types";
+import { PlaylistsState } from "./types";
 import { Actions } from "./actions";
 import { Mutations } from "./mutations";
 import { Getters } from "./getters";
 
-export const PlaylistModule: Module<[PlaylistState], object> = {
-    state: [{
-        name: "",
-        url: "",
-        image: "",
-        id: "",
-        creator: "",
-    }],
+export const PlaylistModule: Module<PlaylistsState, object> = {
+    state: {
+        userPlaylists: [],
+        searchedPlaylists: [],
+    },
     actions: Actions,
     mutations: Mutations,
     getters: Getters,
